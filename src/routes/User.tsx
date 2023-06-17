@@ -37,8 +37,9 @@ const formSchema = z.object({
 export function ProfileForm() {
   const [isOpen, setIsOpen] = useState(false)
   const [rutValue, setRutValue] = useState('')
+  // @ts-ignore
   const [{ isValid, formattedValue, rawValue }, setRut] = useRut(rutValue)
-  
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

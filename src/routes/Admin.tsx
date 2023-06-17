@@ -120,6 +120,7 @@ function App() {
   const rutValue = form.watch('rut')
 
   // Use the RUT value in the `useRut` hook.
+  // @ts-ignore
   const [{ isValid, formattedValue, rawValue }, setRut] = useRut(rutValue)
 
 
