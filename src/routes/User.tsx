@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 
-import { Button } from '../components/shadcn/button'
+import { Button } from '../components/ui/button'
 import {
   Form,
   FormControl,
@@ -13,8 +13,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from '../components/shadcn/form'
-import { Input } from '../components/shadcn/input'
+} from '../components/ui/form'
+import { Input } from '../components/ui/input'
 
 import {
   Dialog,
@@ -22,11 +22,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '../components/shadcn/dialog'
-import { Label } from '../components/shadcn/label'
+} from '../components/ui/dialog'
+import { Label } from '../components/ui/label'
 
 import { Camera } from 'lucide-react'
-import Scanner from '../components/shadcn/scanner'
+import Scanner from '../components/scanner'
 import { useRut } from 'react-rut'
 
 const formSchema = z.object({

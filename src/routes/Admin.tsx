@@ -9,9 +9,9 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '../components/shadcn/table.tsx'
+} from '../components/ui/table.tsx'
 
-import { Button } from '../components/shadcn/button'
+import { Button } from '../components/ui/button.tsx'
 import {
   Dialog,
   DialogContent,
@@ -19,9 +19,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '../components/shadcn/dialog'
-import { Input } from '../components/shadcn/input'
-import { Label } from '../components/shadcn/label'
+} from '../components/ui/dialog.tsx'
+import { Input } from '../components/ui/input.tsx'
+import { Label } from '../components/ui/label.tsx'
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -32,7 +32,7 @@ import {
   FormControl,
   FormField,
   FormMessage
-} from '../components/shadcn/form'
+} from '../components/ui/form.tsx'
 
 import { useRut } from 'react-rut'
 
