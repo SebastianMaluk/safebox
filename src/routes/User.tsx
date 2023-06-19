@@ -53,8 +53,7 @@ export function ProfileForm() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log({formattedValue, password: values.password})
-    
+    console.log({ formattedValue, password: values.password })
   }
 
   return (
@@ -145,49 +144,7 @@ export function ProfileForm() {
             <DialogHeader>
               <DialogTitle>Scan the QR code from your ID card</DialogTitle>
             </DialogHeader>
-            <Scanner setRut={setRut}></Scanner>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-2"
-              >
-                <div className="grid gap-2 py-2">
-                  <FormField
-                    control={form.control}
-                    name="rut"
-                    render={({ field }) => (
-                      <div className="flex items-center justify-center gap-2">
-                        <Label htmlFor="rut" className="text-right">
-                          RUT
-                        </Label>
-                        <Input
-                          id="rut"
-                          disabled
-                          value={formattedValue} // value from useRut
-                          onChange={(e) => {
-                            console.log(e.target.value)
-                            field.onChange(e) // update value in react-hook-form
-                          }}
-                          onBlur={field.onBlur} // blur event from react-hook-form
-                        />
-                      </div>
-                    )}
-                  />
-                  <DialogFooter>
-                    <Button
-                      type="submit"
-                      onClick={(event) => {
-                        event.preventDefault()
-                        setRutValue(formattedValue)
-                        setIsOpen(false)
-                      }}
-                    >
-                      Use
-                    </Button>
-                  </DialogFooter>
-                </div>
-              </form>
-            </Form>
+            <Scanner setRut={setRut} setOpen={setIsOpen}></Scanner>
           </DialogContent>
         </Dialog>
       }

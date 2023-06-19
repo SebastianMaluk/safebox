@@ -1,8 +1,5 @@
 import { useZxing } from 'react-zxing'
-
-interface Props {
-  setRut: (rut: string) => void
-}
+import { Props } from './scanner'
 
 export const BarcodeScanner = (props: Props) => {
   const { ref } = useZxing({
@@ -10,7 +7,10 @@ export const BarcodeScanner = (props: Props) => {
       const url = new URL(result.getText())
       const rutFormatted = url.searchParams.get('RUN')?.replace('-', '')
       if (!rutFormatted) props.setRut('No result')
-      else props.setRut(rutFormatted.toString())
+      else {
+        props.setRut(rutFormatted.toString())
+        props.setOpen(false)
+      }
     }
   })
 
