@@ -1,23 +1,26 @@
-import AWS from 'aws-sdk'
-
-
-if (!process.env.AWS_REGION) throw new Error('AWS_REGION is not defined')
-if (!process.env.AWS_ACCESS_KEY_ID) throw new Error('AWS_ACCESS_KEY_ID is not defined')
-if (!process.env.AWS_SECRET_ACCESS_KEY) throw new Error('AWS_SECRET_ACCESS_KEY is not defined')
-
-AWS.config.update({
-  region: process.env.AWS_REGION,
-  credentials: new AWS.Credentials({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-  })
-})
-
-if (!process.env.AWS_ENDPOINT) throw new Error('AWS_ENDPOINT is not defined')
-const iotHandler = new AWS.IotData({ endpoint:process.env.AWS_ENDPOINT })
-
+import {
+  IoTDataPlaneClient,
+  GetThingShadowCommand,
+  UpdateThingShadowCommand,
+  UpdateThingShadowCommandInput,
+  GetThingShadowCommandOutput,
+  UpdateThingShadowCommandOutput
+} from '@aws-sdk/client-iot-data-plane'
 
 import { shadow } from './types'
+
+import dotenv from 'dotenv'
+dotenv.config()
+
+if (!process.env.AWS_ACCESS_KEY_ID)
+  throw new Error('AWS_ACCESS_KEY_ID is not defined')
+if (!process.env.AWS_SECRET_ACCESS_KEY)
+  throw new Error('AWS_SECRET_ACCESS_KEY is not defined')
+if (!process.env.AWS_REGION) throw new Error('AWS_REGION is not defined')
+if (!process.env.AWS_ENDPOINT) throw new Error('AWS_ENDPOINT is not defined')
+
+const client = new IoTDataPlaneClient({ endpoint: process.env.AWS_ENDPOINT })
+
 
 export function updateAppState(newShadow: shadow) {
   if (newShadow.state.desired.led.onboard === 0) {
@@ -31,19 +34,22 @@ export function updateAppState(newShadow: shadow) {
   }
 }
 
-export function responseHandler(err: any, data: any) {
-  if (err) {
-    console.error('Error updating device shadow:', err)
+function responseHandler(
+  response: UpdateThingShadowCommandOutput | GetThingShadowCommandOutput
+) {
+  if (response.$metadata.httpStatusCode !== 200) {
+    console.error('Error updating device shadow:', response.$metadata)
   } else {
-    const newShadow = JSON.parse(data.payload)
+    const responsePayload = new TextDecoder().decode(response.payload)
+    const newShadow = JSON.parse(responsePayload)
 
-    console.log('Device shadow updated:', newShadow)
+    console.log('Device shadow updated:', JSON.stringify(newShadow.state, null, 2))
 
     updateAppState(newShadow)
   }
 }
 
-export function updateDeviceShadow(event: any) {
+export async function updateDeviceShadow(event: any) {
   const { id } = event.target
 
   event.target.classList.add('loading')
@@ -59,19 +65,36 @@ export function updateDeviceShadow(event: any) {
       }
     }
   }
+  const payloadUint8array = new TextEncoder().encode(JSON.stringify(payload))
 
+  const input: UpdateThingShadowCommandInput = {
+    thingName: 'esp_lamp',
+    payload: Uint8Array.from(payloadUint8array)
+  }
+  const command = new UpdateThingShadowCommand(input)
+  const response = await client.send(command)
+
+  responseHandler(response)
+}
+
+export async function getDeviceShadow() {
   const params = {
-    payload: JSON.stringify(payload),
     thingName: 'esp_lamp'
   }
 
-  iotHandler.updateThingShadow(params, responseHandler)
-}
-
-export function getDeviceShadow() {
-  const params = {
-    thingName: 'esp_lamp'
+  const command = new GetThingShadowCommand(params)
+  const response = await client.send(command)
+  if (response.$metadata.httpStatusCode === 200) {
+    const responsePayload = new TextDecoder().decode(response.payload)
+    const newShadow = JSON.parse(responsePayload)
+    return newShadow
   }
-
-  iotHandler.getThingShadow(params, responseHandler)
+  responseHandler(response)
 }
+
+
+function main() {
+  getDeviceShadow()
+}
+
+main()
