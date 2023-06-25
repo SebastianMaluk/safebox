@@ -61,10 +61,33 @@ export function ProfileForm() {
   })
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log({ formattedValue, password: values.password })
+    // Find all lockers associated with the entered RUT
+    if (!lockers) return
+    const assignedLockers = lockers.filter(locker => locker.rut === rawValue)
+    console.log({ rawValue })
+    console.log({ lockers })
+    console.log({ assignedLockers })
+    if (assignedLockers.length === 0) {
+      form.setError('rut', {
+        type: 'validate',
+        message: 'RUT not found'
+      })
+      return
+    }
+
+    for (let locker of assignedLockers) {
+      locker.lockStatus = 'UNLOCKED'
+      locker.rut = ''
+      locker.password = ''
+      await updateDeviceShadow(locker)
+    }
+
+    const shadow = await getDeviceShadow()
+    setLockers(Object.values(shadow.state.reported.lockers))
   }
 
   return (
