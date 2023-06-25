@@ -35,6 +35,8 @@ import {
 } from '../components/ui/form.tsx'
 
 import { useRut } from 'react-rut'
+import formatRut from '../utils/rutFormat.ts'
+import { updateDeviceShadow, getDeviceShadow } from '../utils/iot.ts'
 
 const formSchema = z.object({
   rut: z.string().nonempty({ message: 'RUT is required' }),
