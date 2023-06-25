@@ -91,8 +91,8 @@ export async function getDeviceShadow() {
 }
 
 
-function main() {
-  getDeviceShadow()
-}
+// function main() {
+//   getDeviceShadow()
+// }
 
-main()
+// main()
