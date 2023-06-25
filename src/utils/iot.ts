@@ -21,15 +21,15 @@ const client = new IoTDataPlaneClient({ endpoint: process.env.AWS_ENDPOINT })
 
 
 export function updateAppState(newShadow: shadow) {
-  if (newShadow.state.desired.led.onboard === 0) {
-    // offButton.disabled = true
-    // onButton.disabled = false
-    console.log('LED is off')
-  } else {
-    // offButton.disabled = false
-    // onButton.disabled = true
-    console.log('LED is on')
-  }
+  // if (newShadow.state.desired.led.onboard === 0) {
+  //   // offButton.disabled = true
+  //   // onButton.disabled = false
+  //   console.log('LED is off')
+  // } else {
+  //   // offButton.disabled = false
+  //   // onButton.disabled = true
+  //   console.log('LED is on')
+  // }
 }
 
 function responseHandler(
