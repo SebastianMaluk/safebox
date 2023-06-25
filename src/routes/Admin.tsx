@@ -191,6 +191,19 @@ function App() {
               <TableCell>{locker.open.toString()}</TableCell>
             </TableRow>
           ))}
+            : (Array.from({length: 3}).map((_, id) => (
+              <TableRow
+                key={id + 1}
+                className='bg-gray-400 hover:bg-gray-300'
+              >
+                <TableCell>{id + 1}</TableCell>
+                <TableCell>Loading</TableCell>
+                <TableCell>Loading</TableCell>
+                <TableCell>Loading</TableCell>
+                <TableCell>Loading</TableCell>
+              </TableRow>
+            )))
+          }
         </TableBody>
       </Table>
       <div className='pt-5'>
