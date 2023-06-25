@@ -43,26 +43,27 @@ const formSchema = z.object({
 
 import { Locker } from '../utils/types'
 
-const defaultData: Locker[] = [
-  {
-    id: 1,
-    rut: '12.345.678-9',
-    used: false,
-    open: false
-  },
-  {
-    id: 2,
-    rut: '12.345.678-9',
-    used: false,
-    open: false
-  },
-  {
-    id: 3,
-    rut: '12.345.678-9',
-    used: false,
-    open: false
-  }
-]
+// const defaultData: Locker[] = [
+//   {
+//     id: 1,
+//     rut: '12.345.678-9',
+//     used: false,
+//     locked: false
+//   },
+//   {
+//     id: 2,
+//     rut: '12.345.678-9',
+//     used: false,
+//     locked: false
+//   },
+//   {
+//     id: 3,
+//     rut: '12.345.678-9',
+//     used: false,
+//     locked: false
+//   }
+// ]
+
 
 function App() {
   const [isOpen, setIsOpen] = useState(false)
