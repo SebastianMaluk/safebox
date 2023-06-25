@@ -17,7 +17,12 @@ if (!(import.meta.env.VITE_AWS_SECRET_ACCESS_KEY))
 if (!(import.meta.env.VITE_AWS_REGION)) throw new Error('AWS_REGION is not defined')
 if (!(import.meta.env.VITE_AWS_ENDPOINT)) throw new Error('AWS_ENDPOINT is not defined')
 
-const client = new IoTDataPlaneClient({ endpoint: process.env.AWS_ENDPOINT })
+const client = new IoTDataPlaneClient(
+  { endpoint: import.meta.env.VITE_AWS_ENDPOINT,
+    region: import.meta.env.VITE_AWS_REGION,
+    credentials: {accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
+                  secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY}
+  })
 
 
 export function updateAppState(newShadow: shadow) {
