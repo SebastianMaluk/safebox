@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import '../App.css'
 import { Link } from 'react-router-dom'
 
@@ -71,6 +71,22 @@ function App() {
 
   const [password, setPassword] = useState('')
 
+  const [lockers, setLockers] = useState<Locker[]>()
+  useEffect(() => {
+    async function fetchDeviceShadow() {
+      const shadow = await getDeviceShadow()
+      setLockers(Object.values(shadow.state.reported.lockers))
+      setTimestamp(shadow.state.reported.timestamp)
+    }
+    const intervalId = setInterval(() => {
+      fetchDeviceShadow()
+    }, 3000)
+      return () => {
+        clearInterval(intervalId)
+      }
+
+    // fetchDeviceShadow()
+  })
   const handleOpen = (locker: Locker) => {
     setIsOpen(true)
     setSelectedLocker(locker)
