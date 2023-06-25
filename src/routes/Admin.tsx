@@ -115,7 +115,7 @@ function App() {
   })
 
   // 2. Define a submit handler.
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     // No need to use `useRut` here anymore because we're already watching the value in the component.
     console.log('Prevalidation')
     console.log({ formattedValue, password: values.password })
@@ -139,9 +139,16 @@ function App() {
       return
     }
     if (!selectedLocker) return
-    selectedLocker.rut = formattedValue
+    selectedLocker.rut = rawValue
     selectedLocker.used = true
-    selectedLocker.open = false
+    selectedLocker.lockStatus = 'LOCKED'
+    if (!lockers) return
+    lockers[selectedLocker.id] = selectedLocker
+    setLockers(lockers)
+    selectedLocker.password = password
+    await updateDeviceShadow(selectedLocker)
+    const shadow = await getDeviceShadow()
+    setLockers(Object.values(shadow.state.reported.lockers))
     setIsOpen(false)
     console.log('Postvalidation')
     console.log({ formattedValue, password: values.password })
