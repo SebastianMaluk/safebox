@@ -164,33 +164,40 @@ function App() {
           Home
         </Link>
       </div>
-
+      {console.log(lockers)}
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead className="w-3 p-0 font-extrabold">Number</TableHead>
             <TableHead className="text-center font-extrabold">RUT</TableHead>
+            <TableHead className="text-center font-extrabold">Password</TableHead>
             <TableHead className="text-center font-extrabold">Used</TableHead>
-            <TableHead className="text-center font-extrabold">Open</TableHead>
+            <TableHead className="text-center font-extrabold">Locked</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {defaultData.map((locker) => (
-            <TableRow
-              key={locker.id}
-              className={
-                locker.used
-                  ? 'bg-red-400 hover:bg-red-300'
-                  : 'bg-green-400 hover:bg-green-300'
-              }
-              onClick={() => handleOpen(locker)}
-            >
-              <TableCell>{locker.id}</TableCell>
-              <TableCell>{locker.rut}</TableCell>
-              <TableCell>{locker.used.toString()}</TableCell>
-              <TableCell>{locker.open.toString()}</TableCell>
-            </TableRow>
-          ))}
+          
+          {lockers ? (
+            lockers.map((locker) => (
+              <TableRow
+                key={locker.id}
+                className={
+                  locker.lockStatus === 'WAITING'
+                    ? 'bg-yellow-400 hover:bg-yellow-300'
+                    : locker.lockStatus === 'UNLOCKED'
+                      ? 'bg-green-400 hover:bg-green-300'
+                      : 'bg-red-400 hover:bg-red-300'
+                }
+                onClick={() => 
+                  locker.lockStatus === 'UNLOCKED' ? handleOpen(locker) : null}
+              >
+                <TableCell>{locker.id}</TableCell>
+                <TableCell>{locker.rut ? formatRut(locker.rut) : 'N/A'}</TableCell>
+                <TableCell>{locker.password ? locker.password : 'N/A'}</TableCell>
+                <TableCell>{locker.used.toString()}</TableCell>
+                <TableCell>{locker.lockStatus}</TableCell>
+              </TableRow>
+            )))
             : (Array.from({length: 3}).map((_, id) => (
               <TableRow
                 key={id + 1}
