@@ -72,6 +72,8 @@ function App() {
   const [password, setPassword] = useState('')
 
   const [lockers, setLockers] = useState<Locker[]>()
+  const [timestamp, setTimestamp] = useState(0)
+  // This function is returned from useEffect and will be called when the component is unmounted
   useEffect(() => {
     async function fetchDeviceShadow() {
       const shadow = await getDeviceShadow()
@@ -87,6 +89,16 @@ function App() {
 
     // fetchDeviceShadow()
   })
+
+  // Calculate the difference between now and the last received timestamp
+  const dateNow = Date.now()
+  const diffInSeconds = Math.floor((dateNow / 1000 - timestamp))
+
+  // Define the message to show based on the calculated difference
+  const statusMessage = diffInSeconds < 5
+    ? `Last connection ${diffInSeconds} seconds ago`
+    : 'System with connection problems';
+
   const handleOpen = (locker: Locker) => {
     setIsOpen(true)
     setSelectedLocker(locker)
@@ -181,6 +193,9 @@ function App() {
           ))}
         </TableBody>
       </Table>
+      <div className='pt-5'>
+        {statusMessage}
+      </div>
 
       {selectedLocker && (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
