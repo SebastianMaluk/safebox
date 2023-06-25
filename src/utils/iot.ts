@@ -7,7 +7,7 @@ import {
   UpdateThingShadowCommandOutput
 } from '@aws-sdk/client-iot-data-plane'
 
-import { shadow } from './types'
+import { Locker, shadow } from './types'
 
 
 if (!(import.meta.env.VITE_AWS_ACCESS_KEY_ID))
@@ -47,18 +47,12 @@ function responseHandler(
   }
 }
 
-export async function updateDeviceShadow(event: any) {
-  const { id } = event.target
-
-  event.target.classList.add('loading')
-
-  const ledValue = id === 'on' ? 1 : 0
-
+export async function updateDeviceShadow(locker: Locker) {
   const payload = {
     state: {
       desired: {
-        led: {
-          onboard: ledValue
+        lockers: {
+          [locker.id]: locker
         }
       }
     }
