@@ -231,15 +231,27 @@ function App() {
                         setPassword('')
                         if (!isValid) {
                           form.setError('rut', {
-                          type: 'validate',
-                          message: 'RUT must be valid'
+                            type: 'validate',
+                            message: 'RUT must be valid'
                           })
                           return
                         }
-                        const randomPassword = Math.floor(Math.random() * 10000)
-                        setPassword(randomPassword.toString())
-                        form.setValue('password', randomPassword.toString()) // update react-hook-form state
-                        console.log({ 'Generated password': randomPassword })
+                        // Check if there are any lockers with the same RUT
+                        if (!lockers) return
+                        const existingLockers = lockers.filter(locker => locker.rut === rawValue)
+                        let passwordToUse = ''
+                        if (existingLockers.length > 0) {
+                          // If there is at least one locker with the same RUT, use its password
+                          if (!existingLockers[0].password) return
+                          passwordToUse = existingLockers[0].password
+                        } else {
+                          // Otherwise, generate a new password
+                          const randomPassword = Math.floor(Math.random() * 10000)
+                          passwordToUse = randomPassword.toString()
+                        }
+                        setPassword(passwordToUse)
+                        form.setValue('password', passwordToUse) // update react-hook-form state
+                        console.log({ 'Generated password': passwordToUse})
                       }}
                     >
                       Generate
