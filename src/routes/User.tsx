@@ -1,6 +1,6 @@
 import '../App.css'
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -28,6 +28,8 @@ import { Label } from '../components/ui/label'
 import { Camera } from 'lucide-react'
 import Scanner from '../components/scanner'
 import { useRut } from 'react-rut'
+import { Locker } from '../utils/types'
+import { getDeviceShadow, updateDeviceShadow } from '../utils/iot'
 
 const formSchema = z.object({
   rut: z.string(),
@@ -39,6 +41,15 @@ export function ProfileForm() {
   const [rutValue, setRutValue] = useState('')
   // @ts-ignore
   const [{ isValid, formattedValue, rawValue }, setRut] = useRut(rutValue)
+
+  const [lockers, setLockers] = useState<Locker[]>()
+  useEffect(() => {
+    async function fetchDeviceShadow() {
+      const shadow = await getDeviceShadow()
+      setLockers(Object.values(shadow.state.reported.lockers))
+    }
+    fetchDeviceShadow() 
+  })
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
