@@ -19,11 +19,9 @@ import { Input } from '../components/ui/input'
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle
 } from '../components/ui/dialog'
-import { Label } from '../components/ui/label'
 
 import { Camera } from 'lucide-react'
 import Scanner from '../components/scanner'
@@ -38,7 +36,7 @@ const formSchema = z.object({
 
 export function ProfileForm() {
   const [isOpen, setIsOpen] = useState(false)
-  const [rutValue, setRutValue] = useState('')
+  const [rutValue] = useState('')
   // @ts-ignore
   const [{ isValid, formattedValue, rawValue }, setRut] = useRut(rutValue)
 

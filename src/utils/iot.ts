@@ -25,7 +25,7 @@ const client = new IoTDataPlaneClient(
   })
 
 
-export function updateAppState(newShadow: shadow) {
+export function updateAppState(_newShadow: shadow) {
   // if (newShadow.state.desired.led.onboard === 0) {
   //   // offButton.disabled = true
   //   // onButton.disabled = false
