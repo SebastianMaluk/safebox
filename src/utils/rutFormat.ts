@@ -1,28 +1,23 @@
-export function cleanRut(rut: string) {
-  // Remove all non-numeric characters, except for the last one
-  rut = rut.toUpperCase()
-  return rut.replace('-', '')
+function unformat(value?: string): string {
+  if (!value) {
+    return ''
+  }
+
+  return value.replace(/^0+|[^0-9kK]+/g, '').toUpperCase()
 }
 
-export function formatRut(rut: string) {
-  // First, clean the rut to ensure correct formatting
-  rut = cleanRut(rut)
+export default function formatRut(value?: string): string {
+  const unformatted = unformat(value)
 
-  // Then, format the rut as 20.638.450-6
-  let rutArray = rut.split('')
-  rutArray.splice(rutArray.length - 1, 0, '-')
-  rutArray.splice(rutArray.length - 5, 0, '.')
-  rutArray.splice(rutArray.length - 9, 0, '.')
-  return rutArray.join('')
+  if (unformatted.length < 2) {
+    return unformatted
+  }
+
+  const length = unformatted.length - 1
+
+  const rut = unformatted
+    .substring(0, length)
+    .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+
+  return `${rut}-${unformatted.charAt(length)}`
 }
-
-function main() {
-  let rut = '20638450-k'
-  let cleanedRut = cleanRut(rut)
-  let formattedRut = formatRut(cleanedRut)
-
-  console.log(`Cleaned RUT: ${cleanedRut}`)
-  console.log(`Formatted RUT: ${formattedRut}`)
-}
-
-main()
