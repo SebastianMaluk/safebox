@@ -138,15 +138,14 @@ function App() {
       setPassword('')
       return
     }
-    if (!selectedLocker) return
-    selectedLocker.rut = rawValue
-    selectedLocker.used = true
-    selectedLocker.lockStatus = 'LOCKED'
-    if (!lockers) return
-    lockers[selectedLocker.id] = selectedLocker
-    setLockers(lockers)
-    selectedLocker.password = password
-    await updateDeviceShadow(selectedLocker)
+    if (!selectedLocker || !lockers) return
+    const updatedLocker = {
+      ...selectedLocker,
+      rut: rawValue,
+      password: password,
+      lockStatus: 'LOCKED'
+    } as Locker
+    await updateDeviceShadow(updatedLocker)
     const shadow = await getDeviceShadow()
     setLockers(Object.values(shadow.state.reported.lockers))
     setIsOpen(false)
