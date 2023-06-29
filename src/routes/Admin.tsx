@@ -110,7 +110,7 @@ function App() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      rut: '20638450-6',
+      rut: '',
     }
   })
 
