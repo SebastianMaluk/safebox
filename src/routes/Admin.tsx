@@ -190,7 +190,7 @@ function App() {
               <TableRow
                 key={locker.id}
                 className={
-                  locker.lockStatus === 'WAITING'
+                  locker.lockStatus === 'UNLOCKED' && locker.rut && locker.password
                     ? 'bg-yellow-400 hover:bg-yellow-300'
                     : locker.lockStatus === 'UNLOCKED'
                       ? 'bg-green-400 hover:bg-green-300'
